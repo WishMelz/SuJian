@@ -1,0 +1,159 @@
+textarea[data-sujian-friends][hidden],
+.sujian-friends-editor [hidden] {
+    display: none !important;
+}
+
+.sujian-friends-editor {
+    --friend-border: #d9dde1;
+    --friend-muted: #68727d;
+    container-type: inline-size;
+    margin-top: 12px;
+    color: #303940;
+    letter-spacing: 0;
+}
+
+.sujian-friend-row {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1fr) 32px;
+    gap: 12px;
+    align-items: start;
+    padding: 16px 0;
+    border-top: 1px solid var(--friend-border);
+}
+
+.sujian-friend-number {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    padding-top: 27px;
+    color: var(--friend-muted);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.sujian-friends-editor .sujian-friend-field {
+    display: block;
+    min-width: 0;
+    margin: 0;
+    font-weight: normal;
+}
+
+.sujian-friend-field > span {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.sujian-friend-name,
+.sujian-friend-url {
+    grid-column: 2;
+}
+
+.sujian-friend-avatar,
+.sujian-friend-description {
+    grid-column: 3;
+}
+
+.sujian-friends-editor .sujian-friend-field input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+    margin: 0;
+    padding: 7px 9px;
+    border: 1px solid var(--friend-border);
+    border-radius: 3px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+}
+
+.sujian-friends-editor input[aria-invalid="true"] {
+    border-color: #b3483e;
+}
+
+.sujian-friends-editor .sujian-friend-remove {
+    grid-column: 4;
+    grid-row: 1;
+    box-sizing: border-box;
+    width: 32px;
+    height: 36px;
+    margin-top: 23px;
+    padding: 0;
+    border: 1px solid var(--friend-border);
+    background: transparent;
+    color: #874139;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.sujian-friends-editor .sujian-friend-remove:hover {
+    border-color: #b3483e;
+    background: #fff1ef;
+}
+
+.sujian-friends-editor input:focus-visible,
+.sujian-friends-editor button:focus-visible {
+    outline: 2px solid #467b96;
+    outline-offset: 2px;
+}
+
+.sujian-friends-add {
+    margin-top: 8px;
+}
+
+.sujian-friends-empty {
+    margin: 0 0 12px;
+    padding: 16px 0;
+    border-block: 1px solid var(--friend-border);
+    color: var(--friend-muted);
+}
+
+.sujian-friends-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+@container (min-width: 720px) {
+    .sujian-friend-row {
+        grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.4fr) minmax(0, 1.5fr) 32px;
+        gap: 10px;
+    }
+
+    .sujian-friends-editor .sujian-friend-field {
+        grid-column: auto;
+        grid-row: 1;
+    }
+
+    .sujian-friend-number {
+        grid-row: 1;
+    }
+
+    .sujian-friends-editor .sujian-friend-remove {
+        grid-column: 6;
+    }
+}
+
+@media (max-width: 540px) {
+    .sujian-friend-row {
+        grid-template-columns: 20px minmax(0, 1fr) 32px;
+        gap: 12px 8px;
+    }
+
+    .sujian-friend-number {
+        grid-row: 1 / 5;
+    }
+
+    .sujian-friends-editor .sujian-friend-field {
+        grid-column: 2;
+    }
+
+    .sujian-friends-editor .sujian-friend-remove {
+        grid-column: 3;
+    }
+}

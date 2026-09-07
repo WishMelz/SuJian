@@ -1,0 +1,85 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tw-animate-css";
+
+@layer utilities {
+    @tailwind utilities source(none);
+}
+
+@source "./";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--muted);
+    --color-accent-foreground: var(--foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --radius-sm: .25rem;
+    --radius-md: .375rem;
+    --radius-lg: .5rem;
+    --radius-xl: .5rem;
+}
+
+.sujian-ui-panel, [data-slot="tooltip-content"] {
+    border: 1px solid var(--border);
+    line-height: 1.5;
+    letter-spacing: 0;
+}
+@layer base {
+    :where(.sujian-ui-panel, #sujian-controls, #sujian-back-to-top) * { border-style: solid; border-width: 0; }
+    :where(.sujian-ui-panel, #sujian-controls, #sujian-back-to-top) button { background-color: transparent; }
+}
+.sujian-ui-panel button, #sujian-controls button, #sujian-back-to-top button { font: inherit; font-size: .875rem; }
+.sujian-ui-panel h2, .sujian-ui-panel p { margin: 0; }
+.sujian-ui-panel [data-slot="dialog-title"], .sujian-ui-panel [data-slot="sheet-title"] { font-size: 1rem; font-weight: 600; padding-right: 2.5rem; overflow-wrap: anywhere; }
+.ui-icon-button { width: 2.5rem; height: 2.5rem; padding: 0; background-color: transparent; color: var(--muted-foreground); }
+.ui-icon-button:hover, .ui-icon-button[aria-expanded="true"] { background: var(--muted); color: var(--foreground); }
+.ui-icon-button:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+.ui-mobile-menu { display: none; }
+.ui-search-dialog { width: calc(100% - 2rem); max-width: 30rem; padding: 1.5rem; gap: 1.25rem; }
+.ui-search-form { display: flex; gap: .5rem; min-width: 0; }
+.ui-search-form [data-slot="input"] { flex: 1; min-width: 0; width: 100%; height: 2.75rem; padding: .5rem .75rem; border: 1px solid var(--input); background: var(--background); }
+.ui-search-form [data-slot="input"]:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+.ui-submit { height: 2.75rem; flex-shrink: 0; }
+.ui-theme-menu { width: 10rem; }
+.ui-theme-menu [role="menuitemradio"] { min-height: 2.75rem; }
+.ui-navigation-sheet { width: min(85vw, 22rem) !important; overflow-y: auto; }
+.ui-navigation { display: flex; flex-direction: column; gap: .25rem; padding: 0 1rem 1rem; }
+.ui-navigation a { display: flex; align-items: center; min-height: 2.75rem; padding: .65rem .75rem; border-radius: .375rem; overflow-wrap: anywhere; }
+.ui-navigation a:hover, .ui-navigation a[aria-current] { background: var(--muted); color: var(--foreground); }
+.sujian-ui-panel [data-slot="dialog-close"], .sujian-ui-panel [data-slot="sheet-close"] { width: 2.75rem; height: 2.75rem; }
+[data-slot="dialog-overlay"], [data-slot="sheet-overlay"] { z-index: 60; }
+[data-slot="dialog-content"], [data-slot="sheet-content"] { z-index: 61; }
+.ui-back-to-top {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 40;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: .5rem;
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 4px 12px rgb(0 0 0 / .12);
+}
+.ui-back-to-top:hover { background: var(--muted); }
+.ui-back-to-top:focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+@media (max-width: 720px) {
+    .ui-icon-button { width: 2.75rem; height: 2.75rem; }
+    .ui-mobile-menu { display: inline-flex; }
+}
+:root { --sujian-ui-ready: 1; }
