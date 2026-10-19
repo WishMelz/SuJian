@@ -1,0 +1,156 @@
+textarea[data-sujian-navigation][hidden],
+.sujian-settings [hidden] {
+    display: none !important;
+}
+.sujian-settings {
+    --setting-border: #d9dde1;
+    --setting-muted: #68727d;
+    letter-spacing: 0;
+}
+.sujian-settings-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--setting-border);
+}
+.sujian-settings-nav a {
+    padding: 6px 0;
+    color: #467b96;
+}
+.sujian-settings-section {
+    padding: 24px 0 12px;
+    border-bottom: 1px solid var(--setting-border);
+    scroll-margin-top: 24px;
+}
+.sujian-settings-section h3 {
+    margin: 0 0 24px;
+    font-size: 18px;
+    line-height: 1.4;
+}
+.sujian-settings-section .typecho-option {
+    margin-bottom: 24px;
+}
+.sujian-settings-section .description {
+    color: var(--setting-muted);
+    font-size: 12px;
+    line-height: 1.6;
+}
+.sujian-settings input,
+.sujian-settings select,
+.sujian-settings textarea {
+    max-width: 100%;
+}
+.sujian-settings input:focus-visible,
+.sujian-settings select:focus-visible,
+.sujian-settings button:focus-visible {
+    outline: 2px solid #467b96;
+    outline-offset: 2px;
+}
+.sujian-navigation-editor {
+    container-type: inline-size;
+}
+.sujian-navigation-row {
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) minmax(160px, 2fr) minmax(115px, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.sujian-setting-field {
+    min-width: 0;
+}
+.sujian-setting-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.sujian-setting-field input,
+.sujian-setting-field select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 36px;
+}
+.sujian-setting-field [aria-invalid="true"] {
+    border-color: #b91c1c;
+}
+.sujian-setting-actions {
+    display: flex;
+    gap: 4px;
+}
+.sujian-setting-button {
+    height: 36px;
+    min-width: 32px;
+    padding: 0 8px;
+    border-radius: 3px;
+}
+.sujian-navigation-editor > .sujian-setting-button {
+    margin-top: 12px;
+}
+.sujian-setting-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+.sujian-gradient-preview {
+    height: 72px;
+    border: 1px solid var(--setting-border);
+    border-radius: 4px;
+    margin: 12px 0 16px;
+}
+.sujian-gradient-controls > .sujian-setting-field {
+    max-width: 120px;
+    margin-bottom: 12px;
+}
+.sujian-gradient-stops {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 12px;
+}
+.sujian-gradient-stop {
+    display: grid;
+    grid-template-columns: 48px minmax(60px, 1fr) 32px;
+    align-items: end;
+    gap: 8px;
+}
+.sujian-gradient-stop input[type="color"] {
+    padding: 3px;
+    cursor: pointer;
+}
+.sujian-setting-advanced {
+    margin-top: 16px;
+}
+.sujian-setting-advanced summary {
+    cursor: pointer;
+    color: #467b96;
+    margin-bottom: 8px;
+}
+.sujian-footer-tokens {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+.sujian-footer-tokens select {
+    height: 36px;
+}
+@container (max-width: 620px) {
+    .sujian-navigation-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .sujian-navigation-row .sujian-setting-field:nth-child(2) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+    .sujian-navigation-row .sujian-setting-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-end;
+    }
+}

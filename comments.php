@@ -1,4 +1,7 @@
-<?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
+<?php
+if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+if (!sujianCommentsEnabled($this->options) || !$this->allow('comment')) return;
+?>
 <section id="comments" class="comments" aria-label="评论">
     <?php $this->comments()->to($comments); ?>
     <?php if ($comments->have()): ?>
@@ -9,7 +12,6 @@
     </div>
     <?php endif; ?>
 
-    <?php if ($this->allow('comment')): ?>
     <div id="<?php $this->respondId(); ?>" class="respond">
         <div class="cancel-comment-reply"><?php $comments->cancelReply(); ?></div>
         <span class="section-kicker">Leave a reply</span>
@@ -28,7 +30,4 @@
             <button class="button button-primary" type="submit">提交评论</button>
         </form>
     </div>
-    <?php else: ?>
-    <div class="comments-closed"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3"></path><rect x="5" y="10" width="14" height="11" rx="2"></rect></svg><span>评论已关闭</span></div>
-    <?php endif; ?>
 </section>

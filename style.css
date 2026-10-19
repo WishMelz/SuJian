@@ -25,6 +25,8 @@ License URI: https://opensource.org/license/mit
     --primary: #7c3aed;
     --primary-foreground: #ffffff;
     --primary-soft: #f3e8ff;
+    --selection-background: #1d4ed8;
+    --selection-foreground: #ffffff;
     --ring: rgba(124, 58, 237, .26);
     --secondary: #f4f4f5;
     --secondary-foreground: #27272a;
@@ -53,6 +55,8 @@ html[data-theme="dark"] {
     --border: #27272a;
     --input: #3f3f46;
     --primary-soft: rgba(124, 58, 237, .18);
+    --selection-background: #93c5fd;
+    --selection-foreground: #111827;
     --secondary: #27272a;
     --secondary-foreground: #fafafa;
     --destructive: #f87171;
@@ -90,7 +94,7 @@ img, video, iframe { max-width: 100%; }
 img { height: auto; }
 svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 [hidden] { display: none !important; }
-::selection { color: var(--foreground); background: var(--primary-soft); }
+::selection { color: var(--selection-foreground); background: var(--selection-background); text-shadow: none; }
 :where(a, button, input, textarea):focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
 
 .container { width: min(calc(100% - (var(--page-gutter) * 2)), var(--container)); margin-inline: auto; }
@@ -265,7 +269,7 @@ kbd { border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 
 .article-back-button svg { width: .95rem; height: .95rem; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .article { border: 0; border-radius: 0; padding: 0; background: transparent; box-shadow: none; }
 .article-header { margin-inline: 0; }
-.article-header h1 { margin: .65rem 0 .75rem; font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.08; letter-spacing: -.05em; }
+.article-header h1 { margin: .65rem 0 .75rem; font-size: clamp(2rem, 5vw, 3.45rem); line-height: 1.08; letter-spacing: -.05em; overflow-wrap: anywhere; }
 .article-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; color: var(--muted-foreground); font-size: .75rem; }
 .article-divider { height: 1px; margin: 1.5rem 0; background: var(--border); }
 .article-content { margin-inline: 0; }

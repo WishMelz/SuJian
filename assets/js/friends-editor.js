@@ -30,39 +30,61 @@
             { key: 'description', label: '简介', placeholder: '站点简介（选填）' }
         ];
         let nextId = 0;
+        let dirty = false;
+
+        function normalizeAddress(value) {
+            if (!value) return '';
+            const url = new URL(value, new URL('../', location.href));
+            if (!['http:', 'https:'].includes(url.protocol) || /\s/.test(value) || /^[a-z][a-z0-9+.-]*:(?!\/\/)/i.test(value)) {
+                throw new Error('Invalid URL');
+            }
+            return value.startsWith('/') && !value.startsWith('//')
+                ? url.pathname + url.search + url.hash : url.href === value + '/' ? value : url.href;
+        }
 
         function synchronize() {
-            source.value = Array.from(rows.children, function (row) {
-                return Array.from(row.querySelectorAll('input'), function (input) {
-                    return input.value.trim();
+            const lines = Array.from(rows.children, function (row) {
+                return Array.from(row.querySelectorAll('input'), function (input, index) {
+                    const value = input.value.trim();
+                    if (index === 1 || index === 2) {
+                        try { return normalizeAddress(value); } catch (exception) { return value; }
+                    }
+                    return value;
                 });
             }).filter(function (values) {
                 return values.some(Boolean);
             }).map(function (values) {
                 return [values[0], values[1], '', values[2], values[3]].join('|');
             }).join('\n');
+            if (dirty) source.value = lines;
             empty.hidden = rows.children.length > 0;
+            const enabled = form.querySelector('[name="friendsEnabled"]:checked')?.value === '1';
             Array.from(rows.children).forEach(function (row, index) {
                 row.querySelector('.sujian-friend-number').textContent = String(index + 1).padStart(2, '0');
+                row.querySelector('[data-move="up"]').disabled = !enabled || index === 0;
+                row.querySelector('[data-move="down"]').disabled = !enabled || index === rows.children.length - 1;
             });
         }
 
         function validateRow(row) {
             const inputs = Array.from(row.querySelectorAll('input'));
+            const enabled = form.querySelector('[name="friendsEnabled"]:checked')?.value === '1';
             const hasContent = inputs.some(function (input) { return input.value.trim() !== ''; });
             inputs.forEach(function (input, index) {
                 const value = input.value.trim();
                 let error = '';
+                if (!enabled) {
+                    input.setCustomValidity('');
+                    input.setAttribute('aria-invalid', 'false');
+                    return;
+                }
                 if (hasContent && fields[index].required && value === '') {
                     error = '请填写' + fields[index].label + '。';
                 } else if (index < 3 && value.includes('|')) {
                     error = '此项不能包含竖线字符，地址中的竖线请替换为 %7C。';
                 } else if (index > 0 && index < 3 && value !== '') {
                     try {
-                        const url = new URL(value, 'https://example.com/');
-                        if (!['http:', 'https:'].includes(url.protocol) || /\s/.test(value) || /^[a-z][a-z0-9+.-]*:(?!\/\/)/i.test(value)) {
-                            error = '请填写有效的 http/https 地址或站内相对路径。';
-                        }
+                        normalizeAddress(value);
                     } catch (exception) {
                         error = '请填写有效的 http/https 地址或站内相对路径。';
                     }
@@ -83,14 +105,14 @@
             number.setAttribute('aria-hidden', 'true');
             row.append(number);
             fields.forEach(function (field, index) {
-                const label = document.createElement('label');
-                label.className = 'sujian-friend-field sujian-friend-' + field.key;
-                const title = document.createElement('span');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'sujian-friend-field sujian-friend-' + field.key;
+                const title = document.createElement('label');
                 title.textContent = field.label + (field.required ? ' *' : '');
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.id = source.id + '-row-' + nextId + '-' + field.key;
-                label.htmlFor = input.id;
+                title.htmlFor = input.id;
                 input.value = values[index] || '';
                 input.placeholder = field.placeholder;
                 input.autocomplete = 'off';
@@ -98,8 +120,30 @@
                     input.inputMode = 'url';
                     input.spellcheck = false;
                 }
-                label.append(title, input);
-                row.append(label);
+                wrapper.append(title, input);
+                row.append(wrapper);
+            });
+            const actions = document.createElement('div');
+            actions.className = 'sujian-friend-actions';
+            ['up', 'down'].forEach(function (direction) {
+                const move = document.createElement('button');
+                move.type = 'button';
+                move.className = 'btn sujian-friend-move';
+                move.dataset.move = direction;
+                move.textContent = direction === 'up' ? '↑' : '↓';
+                move.title = direction === 'up' ? '上移友链' : '下移友链';
+                move.setAttribute('aria-label', move.title);
+                move.addEventListener('click', function () {
+                    const neighbor = direction === 'up' ? row.previousElementSibling : row.nextElementSibling;
+                    if (move.disabled || !neighbor) return;
+                    if (direction === 'up') rows.insertBefore(row, neighbor);
+                    else rows.insertBefore(neighbor, row);
+                    dirty = true;
+                    synchronize();
+                    row.querySelector('input').focus();
+                    status.textContent = '友链顺序已调整';
+                });
+                actions.append(move);
             });
             const remove = document.createElement('button');
             remove.type = 'button';
@@ -111,18 +155,22 @@
                 const name = row.querySelector('input').value.trim();
                 const target = row.nextElementSibling || row.previousElementSibling;
                 row.remove();
+                dirty = true;
                 synchronize();
                 status.textContent = name ? '已删除：' + name : '已删除空白友联';
                 (target ? target.querySelector('input') : add).focus();
             });
-            row.append(remove);
+            actions.append(remove);
+            row.append(actions);
             row.addEventListener('input', function () {
+                dirty = true;
                 validateRow(row);
                 synchronize();
             });
             rows.append(row);
             validateRow(row);
             if (focus) {
+                dirty = true;
                 synchronize();
                 status.textContent = '已添加友联';
                 row.querySelector('input').focus();
@@ -130,6 +178,7 @@
         }
 
         function loadRows() {
+            dirty = false;
             rows.replaceChildren();
             status.textContent = '';
             source.value.split(/\r\n|\r|\n/).forEach(function (line) {
@@ -142,14 +191,29 @@
                     values.slice(4).join('|')
                 ], false);
             });
-            empty.hidden = rows.children.length > 0;
-            Array.from(rows.children).forEach(function (row, index) {
-                row.querySelector('.sujian-friend-number').textContent = String(index + 1).padStart(2, '0');
+            syncEnabledState();
+        }
+
+        function syncEnabledState() {
+            const enabled = form.querySelector('[name="friendsEnabled"]:checked')?.value === '1';
+            editor.hidden = !enabled;
+            Array.from(rows.querySelectorAll('input, button')).forEach(function (input) {
+                input.disabled = !enabled;
             });
+            Array.from(rows.children).forEach(validateRow);
+            synchronize();
+            if (!enabled) status.textContent = '友链已关闭，已有数据仍会保留';
         }
 
         add.addEventListener('click', function () { appendRow([], true); });
         form.addEventListener('submit', synchronize);
+        form.addEventListener('formdata', function (event) {
+            synchronize();
+            event.formData.set(source.name, source.value);
+        });
+        form.querySelectorAll('[name="friendsEnabled"]').forEach(function (input) {
+            input.addEventListener('change', syncEnabledState);
+        });
         form.addEventListener('reset', function () { setTimeout(loadRows, 0); });
         loadRows();
         source.insertAdjacentElement('afterend', editor);

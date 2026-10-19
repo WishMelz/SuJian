@@ -54,7 +54,7 @@ $seoImage = sujianSeoImage($this, $this->options);
 $seoImageAlt = $this->is('post') || $this->is('page') ? sujianContentTitle($this, $this->options) : $siteTitle;
 $articleAuthorName = $this->is('post') ? sujianPlainText($this->author->screenName) : '';
 $seoLogo = sujianSafeUrl(sujianAbsoluteUrl(
-    sujianOption($this->options, 'seoLogo'),
+    sujianOption($this->options, 'seoLogo', sujianOption($this->options, 'seoDefaultImage')),
     $siteUrl
 ));
 $publishedTime = $this->is('post') ? date(DATE_W3C, (int) $this->created) : '';

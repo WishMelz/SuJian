@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-accent="zinc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Article layout regression fixture</title>
+    <link rel="icon" href="../favicon.svg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../ghmd.css">
+    <style>.reproduce-original .article-header h1 { overflow-wrap: normal; }</style>
+    <script>
+        if (new URLSearchParams(location.search).get('repro') === '1') {
+            document.documentElement.classList.add('reproduce-original');
+        }
+    </script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="article-layout.html">
+                <span class="brand-mark"><img src="../favicon.svg" alt="" width="36" height="36"></span>
+                <span class="brand-copy"><strong>Layout fixture</strong></span>
+            </a>
+        </div>
+    </header>
+    <main class="container single-layout" id="main" tabindex="-1">
+        <nav class="article-back" aria-label="Test cases">
+            <a class="article-back-button" href="article-layout.html">Fixed layout</a>
+            <a class="article-back-button" href="article-layout.html?repro=1">Original wrapping</a>
+        </nav>
+        <article class="article">
+            <header class="article-header">
+                <span class="badge">Regression fixture</span>
+                <h1>Namecrane/CraneMail ResponsiveArticleLayoutRegressionWithUnbrokenTechnicalIdentifiers - Nginx stream proxy</h1>
+                <div class="article-meta"><time datetime="2026-10-19">October 19, 2026</time></div>
+            </header>
+            <div class="article-divider"></div>
+            <div class="article-content markdown-body">
+                <p>This simulated article uses the theme's production styles without creating a database record.</p>
+                <h2>Long technical text</h2>
+                <p>A long identifier: ResponsiveArticleLayoutRegressionWithUnbrokenTechnicalIdentifiersAndNoSpaces1234567890.</p>
+                <p><a href="https://example.test/docs/ResponsiveArticleLayoutRegressionWithUnbrokenTechnicalIdentifiersAndNoSpaces1234567890">https://example.test/docs/ResponsiveArticleLayoutRegressionWithUnbrokenTechnicalIdentifiersAndNoSpaces1234567890</a></p>
+                <h2>Scrollable code</h2>
+                <pre><code>server {
+    listen 993 ssl;
+    proxy_pass mail.example.test:993;
+    ssl_certificate /etc/certificates/ResponsiveArticleLayoutRegressionWithUnbrokenTechnicalIdentifiers/fullchain.pem;
+    proxy_ssl_server_name on;
+}</code></pre>
+                <h2>Wide table</h2>
+                <table>
+                    <thead><tr><th>Service</th><th>Host</th><th>Port</th><th>Transport</th></tr></thead>
+                    <tbody><tr><td>Incoming mail</td><td>mail.example.test</td><td>993</td><td>TLS</td></tr></tbody>
+                </table>
+                <h2>Image</h2>
+                <img src="../screenshot.png" alt="SuJian theme preview" width="1200" loading="lazy">
+            </div>
+        </article>
+    </main>
+</body>
+</html>

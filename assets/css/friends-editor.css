@@ -37,10 +37,11 @@ textarea[data-sujian-friends][hidden],
     font-weight: normal;
 }
 
-.sujian-friend-field > span {
+.sujian-friend-field > label {
     display: block;
     margin-bottom: 6px;
     font-size: 12px;
+    font-weight: normal;
     line-height: 1.4;
 }
 
@@ -73,22 +74,44 @@ textarea[data-sujian-friends][hidden],
     border-color: #b3483e;
 }
 
-.sujian-friends-editor .sujian-friend-remove {
+.sujian-friend-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     grid-column: 4;
-    grid-row: 1;
+    grid-row: 1 / 3;
+    margin-top: 23px;
+}
+
+.sujian-friend-actions .btn {
     box-sizing: border-box;
     width: 32px;
     height: 36px;
-    margin-top: 23px;
+    flex: none;
     padding: 0;
     border: 1px solid var(--friend-border);
     background: transparent;
-    color: #874139;
-    font-size: 22px;
+    color: inherit;
+    font-size: 18px;
     line-height: 1;
 }
 
-.sujian-friends-editor .sujian-friend-remove:hover {
+.sujian-friend-actions .btn:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.sujian-friend-move:not(:disabled):hover {
+    border-color: #467b96;
+    background: #edf5f8;
+}
+
+.sujian-friends-editor .sujian-friend-remove {
+    color: #874139;
+    font-size: 22px;
+}
+
+.sujian-friends-editor .sujian-friend-remove:not(:disabled):hover {
     border-color: #b3483e;
     background: #fff1ef;
 }
@@ -121,7 +144,7 @@ textarea[data-sujian-friends][hidden],
 
 @container (min-width: 720px) {
     .sujian-friend-row {
-        grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.4fr) minmax(0, 1.5fr) 32px;
+        grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.4fr) minmax(0, 1.5fr) 104px;
         gap: 10px;
     }
 
@@ -134,8 +157,10 @@ textarea[data-sujian-friends][hidden],
         grid-row: 1;
     }
 
-    .sujian-friends-editor .sujian-friend-remove {
+    .sujian-friend-actions {
         grid-column: 6;
+        grid-row: 1;
+        flex-direction: row;
     }
 }
 
@@ -153,7 +178,8 @@ textarea[data-sujian-friends][hidden],
         grid-column: 2;
     }
 
-    .sujian-friends-editor .sujian-friend-remove {
+    .sujian-friend-actions {
         grid-column: 3;
+        grid-row: 1 / 5;
     }
 }

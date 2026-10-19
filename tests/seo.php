@@ -42,3 +42,10 @@ $options = (object) array('siteUrl' => $siteUrl, 'seoDefaultImage' => '/share.pn
 checkSeoSame('http://example.test:8080/share.png', sujianSeoImage($archive, $options), 'invalid image uses default share image');
 $options->seoDefaultImage = 'data:image/png;base64,AAAA';
 checkSeoSame('', sujianSeoImage($archive, $options), 'invalid default image is omitted');
+foreach (array(
+    '/uploads/%E5%9B%BE%E6%A0%87.png' => 'http://example.test:8080/uploads/%E5%9B%BE%E6%A0%87.png',
+    'https://xn--fsqu00a.xn--0zwm56d/%E5%9B%BE%E7%89%87.png' => 'https://xn--fsqu00a.xn--0zwm56d/%E5%9B%BE%E7%89%87.png'
+) as $url => $expected) {
+    $options->seoDefaultImage = $url;
+    checkSeoSame($expected, sujianSeoImage($archive, $options), 'normalized settings image survives PHP validation');
+}

@@ -4,7 +4,7 @@
  *
  * @package SuJian · 素笺
  * @author WishMelz
- * @version 1.0.0
+ * @version 1.0.1
  * @link https://github.com/WishMelz/SuJian
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;

@@ -4,7 +4,7 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 define('SUJIAN_THEME_NAME', 'SuJian');
 define('SUJIAN_THEME_NAME_ZH', '素笺');
 define('SUJIAN_THEME_DISPLAY_NAME', SUJIAN_THEME_NAME . ' · ' . SUJIAN_THEME_NAME_ZH);
-define('SUJIAN_THEME_VERSION', '1.0.0');
+define('SUJIAN_THEME_VERSION', '1.0.1');
 define('SUJIAN_THEME_REPOSITORY', 'https://github.com/WishMelz/SuJian');
 
 function sujianSafeUrl($url, $fallback = '')
@@ -31,6 +31,11 @@ function sujianOption($options, $name, $fallback = '')
 {
     $value = isset($options->{$name}) ? trim((string) $options->{$name}) : '';
     return $value !== '' ? $value : $fallback;
+}
+
+function sujianCommentsEnabled($options)
+{
+    return sujianOption($options, 'commentsEnabled', '1') === '1';
 }
 
 function sujianLanguage($options)
@@ -422,9 +427,10 @@ function themeConfig($form)
         'navigation',
         null,
         "首页|/|self\nWish|https://blog.itsse.cn|blank\n关于|https://github.com/WishMelz/SuJian|blank",
-        _t('导航数据'),
-        _t('每行一个导航，格式为“名称|地址|打开方式”。打开方式填写 self（当前标签页）或 blank（新标签页）；省略时默认为 self。地址支持站内相对路径或 http/https 地址。')
+        _t('导航菜单'),
+        _t('每行一个导航，格式为“名称|地址|打开方式”。打开方式填写 self（当前标签页）或 blank（新标签页）；省略时默认为 self。地址支持以 / 开头的站内路径或 http/https 地址。')
     );
+    $navigation->input->setAttribute('data-sujian-navigation', '');
     $form->addInput($navigation);
 
     $articleLinkTarget = new Typecho_Widget_Helper_Form_Element_Select(
@@ -438,6 +444,14 @@ function themeConfig($form)
         _t('控制首页和归档列表中的文章标题、阅读全文链接。选择当前标签页时，文章详情顶部会显示返回按钮。')
     );
     $form->addInput($articleLinkTarget);
+
+    $commentsEnabled = new Typecho_Widget_Helper_Form_Element_Radio(
+        'commentsEnabled',
+        array('1' => _t('开启'), '0' => _t('关闭')),
+        '1',
+        _t('全站评论')
+    );
+    $form->addInput($commentsEnabled);
 
     $bannerMode = new Typecho_Widget_Helper_Form_Element_Select(
         'bannerMode',
@@ -536,4 +550,9 @@ function themeConfig($form)
         _t('主题强调色')
     );
     $form->addInput($accent);
+
+    $settingsEditor = new \Typecho\Widget\Helper\Layout('');
+    $settingsEditor->html('<style>' . file_get_contents(__DIR__ . '/assets/css/settings-editor.css') . '</style>'
+        . '<script>' . file_get_contents(__DIR__ . '/assets/js/settings-editor.js') . '</script>');
+    $form->addItem($settingsEditor);
 }

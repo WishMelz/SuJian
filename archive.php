@@ -32,7 +32,9 @@
             <h2 itemprop="headline"><a itemprop="url" href="<?php $this->permalink(); ?>"<?php echo sujianArticleLinkAttributes($this->options); ?>><?php $this->title(); ?></a></h2>
             <?php if ($excerpt !== ''): ?><div class="post-excerpt" itemprop="description"><?php echo htmlspecialchars($excerpt, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
             <div class="post-card-footer">
+                <?php if (sujianCommentsEnabled($this->options) && $this->allow('comment')): ?>
                 <span><?php $this->commentsNum('暂无评论', '1 条评论', '%d 条评论'); ?></span>
+                <?php endif; ?>
                 <a class="read-more" href="<?php $this->permalink(); ?>"<?php echo sujianArticleLinkAttributes($this->options); ?>>阅读全文<span class="sr-only">：<?php echo htmlspecialchars(sujianContentTitle($this, $this->options, '文章'), ENT_QUOTES, 'UTF-8'); ?></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
             </div>
         </article>
