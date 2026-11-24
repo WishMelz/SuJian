@@ -1,46 +1,62 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
-<?php $this->need('header.php'); ?>
-<main class="container archive-layout<?php if ($this->is('search')): ?> archive-layout-search<?php endif; ?>" id="main">
+<?php
+$this->need('header.php');
+$archiveKicker = '归档';
+if ($this->is('search')) {
+    $archiveKicker = '搜索结果';
+} elseif ($this->is('category')) {
+    $archiveKicker = '分类';
+} elseif ($this->is('tag')) {
+    $archiveKicker = '标签';
+} elseif ($this->is('author')) {
+    $archiveKicker = '作者';
+}
+$archiveTotal = method_exists($this, 'getTotal') ? (int) $this->getTotal() : 0;
+$archiveSummary = '';
+if ($this->is('search')) {
+    $archiveSummary = $archiveTotal > 0 ? '共找到 ' . $archiveTotal . ' 篇相关文章' : '';
+} else {
+    $archiveDescription = '';
+    if ($this->is('category') || $this->is('tag')) {
+        $archiveDescription = sujianPlainText(method_exists($this, 'getArchiveDescription') ? $this->getArchiveDescription() : $this->getDescription());
+        // 分类描述常被填成与名称相同的文字，这种情况下改为显示文章数
+        $archiveName = method_exists($this, 'getArchiveTitle') ? sujianPlainText((string) $this->getArchiveTitle()) : '';
+        if ($archiveDescription !== '' && strcasecmp($archiveDescription, $archiveName) === 0) {
+            $archiveDescription = '';
+        }
+    }
+    $archiveSummary = $archiveDescription !== '' ? $archiveDescription : ($archiveTotal > 0 ? '共 ' . $archiveTotal . ' 篇文章' : '');
+}
+?>
+<main class="container archive-layout<?php if ($this->is('search')): ?> archive-layout-search<?php endif; ?>" id="main" tabindex="-1" data-list-page>
     <header class="archive-header">
-        <span class="section-kicker"><?php echo $this->is('search') ? 'Search results' : 'Archive'; ?></span>
+        <span class="archive-kicker"><?php echo htmlspecialchars($archiveKicker, ENT_QUOTES, 'UTF-8'); ?></span>
         <h1><?php $this->archiveTitle(array(
-            'category' => _t('分类：%s'),
-            'search' => _t('搜索“%s”'),
-            'tag' => _t('标签：%s'),
-            'author' => _t('%s 的文章')
+            'category' => _t('%s'),
+            'search' => _t('“%s”'),
+            'tag' => _t('%s'),
+            'author' => _t('%s'),
+            'date' => _t('%s')
         ), '', ''); ?></h1>
-        <p><?php echo $this->is('search') ? '可查看结果，或尝试其他关键词。' : '按主题整理的文章、代码片段与实践记录。'; ?></p>
+        <?php if ($archiveSummary !== ''): ?><p class="archive-summary"><?php echo htmlspecialchars($archiveSummary, ENT_QUOTES, 'UTF-8'); ?></p><?php endif; ?>
         <?php if ($this->is('search')): ?>
         <form class="archive-search" method="get" action="<?php $this->options->siteUrl(); ?>" role="search">
             <label class="sr-only" for="archive-search">重新搜索</label>
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.4-3.4"></path></svg>
-            <input id="archive-search" type="search" name="s" placeholder="重新搜索…" value="<?php $this->keywords(); ?>">
+            <input id="archive-search" type="search" name="s" placeholder="换个关键词…" value="<?php $this->keywords(); ?>">
             <button class="button button-primary" type="submit">搜索</button>
         </form>
         <?php endif; ?>
     </header>
 
     <?php if ($this->have()): ?>
-    <div class="archive-list">
+    <div class="post-list">
         <?php while ($this->next()): ?>
-        <?php $excerpt = sujianExcerpt($this); ?>
-        <article class="post-card archive-card" itemscope itemtype="https://schema.org/BlogPosting">
-            <div class="post-card-topline">
-                <div class="category-list"><span class="badge"><?php $this->category('</span><span class="badge">', true, '随笔'); ?></span></div>
-                <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date('Y-m-d'); ?></time>
-            </div>
-            <h2 itemprop="headline"><a itemprop="url" href="<?php $this->permalink(); ?>"<?php echo sujianArticleLinkAttributes($this->options); ?>><?php $this->title(); ?></a></h2>
-            <?php if ($excerpt !== ''): ?><div class="post-excerpt" itemprop="description"><?php echo htmlspecialchars($excerpt, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
-            <div class="post-card-footer">
-                <?php if (sujianCommentsEnabled($this->options) && $this->allow('comment')): ?>
-                <span><?php $this->commentsNum('暂无评论', '1 条评论', '%d 条评论'); ?></span>
-                <?php endif; ?>
-                <a class="read-more" href="<?php $this->permalink(); ?>"<?php echo sujianArticleLinkAttributes($this->options); ?>>阅读全文<span class="sr-only">：<?php echo htmlspecialchars(sujianContentTitle($this, $this->options, '文章'), ENT_QUOTES, 'UTF-8'); ?></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-            </div>
-        </article>
+        <?php $this->need('partials/post-item.php'); ?>
         <?php endwhile; ?>
     </div>
-    <nav class="pagination-wrap" aria-label="文章分页"><?php $this->pageNav('上一页', '下一页', 2, '…'); ?></nav>
+    <?php ob_start(); $this->pageNav('上一页', '下一页', 2, '…'); $pagination = trim(ob_get_clean()); ?>
+    <?php if ($pagination !== ''): ?><nav class="pagination-wrap" aria-label="文章分页"><?php echo $pagination; ?></nav><?php endif; ?>
     <?php else: ?>
     <section class="empty-state">
         <span class="empty-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.4-3.4"></path></svg></span>

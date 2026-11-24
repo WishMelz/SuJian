@@ -1,50 +1,39 @@
-/* GitHub Markdown styling adapted for the SuJian article surface. */
+/* 素笺正文排版：基于 GitHub Markdown 结构，按中文长文阅读习惯调整（宋体标题、1.85 行高、纸色代码块）。 */
 .markdown-body {
   --base-size-4: .25rem;
   --base-size-8: .5rem;
-  --base-size-16: 1rem;
+  --base-size-16: 1.15em;
   --base-size-24: 1.5rem;
   --base-size-40: 2.5rem;
   --base-text-weight-normal: 400;
   --base-text-weight-medium: 500;
   --base-text-weight-semibold: 600;
-  --fontStack-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --fontStack-monospace: var(--font-mono, ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace);
   --focus-outlineColor: var(--primary);
-  --fgColor-default: #1f2328;
-  --fgColor-muted: #59636e;
-  --fgColor-accent: #0969da;
-  --fgColor-danger: #d1242f;
+  --fgColor-default: var(--foreground, #2b2926);
+  --fgColor-muted: var(--muted-foreground-strong, #57524a);
+  --fgColor-accent: var(--primary, #2b2926);
+  --fgColor-danger: var(--destructive, #b3261e);
   --bgColor-default: transparent;
-  --bgColor-muted: #f6f8fa;
-  --bgColor-neutral-muted: #818b981f;
-  --bgColor-attention-muted: #fff8c5;
-  --borderColor-default: #d1d9e0;
-  --borderColor-muted: #d1d9e0b3;
-  --borderColor-neutral-muted: #d1d9e0b3;
+  --bgColor-muted: var(--muted, #efebe3);
+  --bgColor-neutral-muted: rgba(90, 72, 40, .08);
+  --bgColor-attention-muted: #f6e9b8;
+  --borderColor-default: var(--border, #e5e0d5);
+  --borderColor-strong: var(--border-strong, #d3ccbe);
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   margin: 0;
   color: var(--fgColor-default);
   background-color: transparent;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  font-size: 16px;
-  line-height: 1.72;
+  font-family: inherit;
+  font-size: 1.0625rem;
+  line-height: 1.85;
   overflow-wrap: anywhere;
 }
 
 html[data-theme="dark"] .markdown-body {
-  --focus-outlineColor: var(--primary);
-  --fgColor-default: #f0f6fc;
-  --fgColor-muted: #9198a1;
-  --fgColor-accent: #4493f8;
-  --fgColor-danger: #f85149;
-  --bgColor-default: transparent;
-  --bgColor-muted: #151b23;
-  --bgColor-neutral-muted: #656c7633;
-  --bgColor-attention-muted: #bb800926;
-  --borderColor-default: #3d444d;
-  --borderColor-muted: #3d444db3;
-  --borderColor-neutral-muted: #3d444db3;
+  --bgColor-neutral-muted: rgba(232, 227, 217, .1);
+  --bgColor-attention-muted: rgba(214, 170, 60, .22);
 }
 
 .markdown-body::before,
@@ -55,11 +44,16 @@ html[data-theme="dark"] .markdown-body {
 .markdown-body [hidden] { display: none !important; }
 .markdown-body details, .markdown-body figcaption, .markdown-body figure { display: block; }
 .markdown-body summary { display: list-item; cursor: pointer; }
-.markdown-body a { color: var(--fgColor-accent); text-decoration: underline; text-decoration-color: currentColor; text-decoration-color: color-mix(in srgb, currentColor 42%, transparent); text-underline-offset: .18em; }
+.markdown-body a {
+  color: var(--fgColor-accent);
+  text-decoration: underline; text-decoration-color: var(--borderColor-strong);
+  text-decoration-thickness: 1px; text-underline-offset: .22em;
+  transition: text-decoration-color .15s ease;
+}
 .markdown-body a:hover { text-decoration-color: currentColor; }
 .markdown-body a:not([href]) { color: inherit; text-decoration: none; }
 .markdown-body b, .markdown-body strong { font-weight: var(--base-text-weight-semibold); }
-.markdown-body mark { color: var(--fgColor-default); background-color: var(--bgColor-attention-muted); }
+.markdown-body mark { padding: 0 .1em; color: var(--fgColor-default); background-color: var(--bgColor-attention-muted); }
 .markdown-body small { font-size: 90%; }
 .markdown-body sub, .markdown-body sup { position: relative; font-size: 75%; line-height: 0; vertical-align: baseline; }
 .markdown-body sub { bottom: -.25em; }
@@ -71,19 +65,21 @@ html[data-theme="dark"] .markdown-body {
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
-  margin-top: var(--base-size-24);
-  margin-bottom: var(--base-size-16);
+  margin-top: 2em;
+  margin-bottom: .75em;
   color: var(--fgColor-default);
+  font-family: var(--font-serif, serif);
   font-weight: var(--base-text-weight-semibold);
-  line-height: 1.25;
-  scroll-margin-top: 6rem;
+  letter-spacing: .02em;
+  line-height: 1.45;
+  scroll-margin-top: 5.5rem;
 }
-.markdown-body h1 { padding-bottom: .3em; border-bottom: 1px solid var(--borderColor-muted); font-size: 2em; }
-.markdown-body h2 { padding-bottom: .3em; border-bottom: 1px solid var(--borderColor-muted); font-size: 1.5em; }
-.markdown-body h3 { font-size: 1.25em; }
-.markdown-body h4 { font-size: 1em; }
-.markdown-body h5 { font-size: .875em; }
-.markdown-body h6 { color: var(--fgColor-muted); font-size: .85em; }
+.markdown-body h1 { font-size: 1.6em; }
+.markdown-body h2 { font-size: 1.4em; }
+.markdown-body h3 { font-size: 1.2em; }
+.markdown-body h4 { font-size: 1.05em; }
+.markdown-body h5 { font-size: 1em; }
+.markdown-body h6 { color: var(--fgColor-muted); font-size: .95em; }
 
 .markdown-body p,
 .markdown-body blockquote,
@@ -93,43 +89,65 @@ html[data-theme="dark"] .markdown-body {
 .markdown-body table,
 .markdown-body pre,
 .markdown-body details { margin-top: 0; margin-bottom: var(--base-size-16); }
-.markdown-body ul, .markdown-body ol { padding-left: 2em; }
+.markdown-body ul, .markdown-body ol { padding-left: 1.6em; }
 .markdown-body ul ul, .markdown-body ul ol, .markdown-body ol ol, .markdown-body ol ul { margin-top: 0; margin-bottom: 0; }
-.markdown-body li + li { margin-top: .25em; }
+.markdown-body li + li { margin-top: .3em; }
 .markdown-body li > p { margin-top: var(--base-size-16); }
-.markdown-body blockquote { margin-left: 0; margin-right: 0; padding: 0 1em; color: var(--fgColor-muted); border-left: .25em solid var(--borderColor-default); }
+.markdown-body li::marker { color: var(--muted-foreground, #6b665c); }
+.markdown-body blockquote {
+  margin-left: 0; margin-right: 0; padding: .1em 0 .1em 1.1em;
+  color: var(--fgColor-muted); border-left: 3px solid var(--borderColor-strong);
+}
 .markdown-body blockquote > :first-child { margin-top: 0; }
 .markdown-body blockquote > :last-child { margin-bottom: 0; }
-.markdown-body hr { height: .25em; margin: var(--base-size-24) 0; padding: 0; overflow: hidden; border: 0; background-color: var(--borderColor-default); }
+/* 分隔线：信笺式的三点装饰 */
+.markdown-body hr {
+  height: auto; margin: 2.25em 0; padding: 0; overflow: visible;
+  border: 0; background: none; color: var(--muted-foreground, #6b665c); text-align: center;
+}
+.markdown-body hr::before { content: "·  ·  ·"; letter-spacing: .6em; white-space: pre; }
 
 .markdown-body code,
 .markdown-body tt,
 .markdown-body samp,
 .markdown-body pre { font-family: var(--fontStack-monospace); }
-.markdown-body code, .markdown-body tt { padding: .2em .4em; margin: 0; border-radius: 6px; background-color: var(--bgColor-neutral-muted); font-size: 85%; white-space: break-spaces; }
-.markdown-body pre { padding: var(--base-size-16); overflow: auto; border-radius: 6px; background-color: var(--bgColor-muted); font-size: 85%; line-height: 1.45; word-wrap: normal; }
+.markdown-body code, .markdown-body tt {
+  padding: .15em .4em; margin: 0 .05em; border-radius: 4px;
+  background-color: var(--bgColor-neutral-muted); font-size: .85em; white-space: break-spaces;
+}
+.markdown-body pre {
+  padding: 1em 1.15em; overflow: auto; border-radius: 6px;
+  background-color: var(--bgColor-muted); font-size: .84em; line-height: 1.65; word-wrap: normal;
+}
 .markdown-body pre > code { padding: 0; margin: 0; border: 0; background: transparent; font-size: 100%; white-space: pre; word-break: normal; }
 
-.markdown-body table { display: block; width: max-content; max-width: 100%; overflow: auto; border-spacing: 0; border-collapse: collapse; font-variant: tabular-nums; }
-.markdown-body table th { font-weight: var(--base-text-weight-semibold); }
-.markdown-body table th, .markdown-body table td { padding: 6px 13px; border: 1px solid var(--borderColor-default); }
-.markdown-body table tr { border-top: 1px solid var(--borderColor-muted); background-color: var(--bgColor-default); }
-.markdown-body table tr:nth-child(2n) { background-color: var(--bgColor-muted); }
+.markdown-body table {
+  display: block; width: max-content; max-width: 100%; overflow: auto;
+  border-spacing: 0; border-collapse: collapse; font-size: .94em; font-variant: tabular-nums;
+}
+.markdown-body table th { font-weight: var(--base-text-weight-semibold); background-color: var(--bgColor-muted); }
+.markdown-body table th, .markdown-body table td { padding: .5em .9em; border: 1px solid var(--borderColor-default); }
+.markdown-body table tr { background-color: var(--bgColor-default); }
 .markdown-body table td > :last-child { margin-bottom: 0; }
 
-.markdown-body img { max-width: 100%; height: auto; box-sizing: content-box; border-style: none; }
+.markdown-body img { max-width: 100%; height: auto; box-sizing: content-box; border-style: none; border-radius: 4px; }
 .markdown-body img[align="right"] { padding-left: 20px; }
 .markdown-body img[align="left"] { padding-right: 20px; }
-.markdown-body figure { margin: 1em var(--base-size-40); }
-.markdown-body kbd { display: inline-block; padding: var(--base-size-4); border: 1px solid var(--borderColor-neutral-muted); border-radius: 6px; background-color: var(--bgColor-muted); box-shadow: inset 0 -1px 0 var(--borderColor-neutral-muted); color: var(--fgColor-default); font: 11px var(--fontStack-monospace); line-height: 10px; vertical-align: middle; }
+.markdown-body figure { margin: 1.5em 0; }
+.markdown-body figcaption { margin-top: .5em; color: var(--muted-foreground, #6b665c); font-size: .875em; text-align: center; }
+.markdown-body kbd {
+  display: inline-block; padding: 0 .35em; border: 1px solid var(--borderColor-strong); border-bottom-width: 2px; border-radius: 4px;
+  background-color: var(--bgColor-default); color: var(--fgColor-default);
+  font: .8em/1.6 var(--fontStack-monospace); vertical-align: .05em;
+}
 .markdown-body input { margin: 0; font: inherit; }
 .markdown-body input[type="checkbox"], .markdown-body input[type="radio"] { box-sizing: border-box; padding: 0; }
 .markdown-body .task-list-item { list-style-type: none; }
 .markdown-body .task-list-item-checkbox { margin: 0 .2em .25em -1.4em; vertical-align: middle; }
 .markdown-body .absent { color: var(--fgColor-danger); }
-.markdown-body .footnotes { border-top: 1px solid var(--borderColor-default); color: var(--fgColor-muted); font-size: 12px; }
+.markdown-body .footnotes { margin-top: 2.5em; padding-top: 1em; border-top: 1px solid var(--borderColor-default); color: var(--fgColor-muted); font-size: .875em; }
 
 @media (max-width: 720px) {
-  .markdown-body { font-size: 16px; }
-  .markdown-body figure { margin-inline: 0; }
+  .markdown-body { font-size: 1rem; line-height: 1.8; }
+  .markdown-body pre { padding: .9em 1em; border-radius: 4px; }
 }

@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             ['https://cdn.example.test/\u56fe\u6807.png', 'https://cdn.example.test/%E5%9B%BE%E6%A0%87.png'],
             ['https://\u4f8b\u5b50.\u6d4b\u8bd5/\u56fe\u7247.png', 'https://xn--fsqu00a.xn--0zwm56d/%E5%9B%BE%E7%89%87.png'],
             ['/uploads/\u56fe\u6807.png', encodedPath],
-            ['uploads/\u56fe\u6807.png', new URL('uploads/%E5%9B%BE%E6%A0%87.png', new URL('../', location.href)).href],
+            ['uploads/\u56fe\u6807.png', new URL('uploads/%E5%9B%BE%E6%A0%87.png', new URL('../', location.href)).pathname],
             [encodedPath + '?v=1&size=32#icon', encodedPath + '?v=1&size=32#icon'],
             ['', ''],
             ['   ', '']

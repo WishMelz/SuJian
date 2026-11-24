@@ -312,7 +312,7 @@ function preload(url, fetchPriority = 'auto') {
   // prefetches happening once the initial page is sufficiently loaded,
   // this theft of bandwidth should rarely be detrimental.
 
-  linkElement.as = 'document'
+  // Removed deprecated linkElement.as = 'document' (crbug.com/1352371).
   // as=document is Chromium-only and allows cross-origin prefetches to be
   // usable for navigation. They call it “restrictive prefetch” and intend
   // to remove it: https://crbug.com/1352371

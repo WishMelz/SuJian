@@ -142,29 +142,7 @@ textarea[data-sujian-friends][hidden],
     white-space: nowrap;
 }
 
-@container (min-width: 720px) {
-    .sujian-friend-row {
-        grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 1.4fr) minmax(0, 1.5fr) 104px;
-        gap: 10px;
-    }
-
-    .sujian-friends-editor .sujian-friend-field {
-        grid-column: auto;
-        grid-row: 1;
-    }
-
-    .sujian-friend-number {
-        grid-row: 1;
-    }
-
-    .sujian-friend-actions {
-        grid-column: 6;
-        grid-row: 1;
-        flex-direction: row;
-    }
-}
-
-@media (max-width: 540px) {
+@container (max-width: 520px) {
     .sujian-friend-row {
         grid-template-columns: 20px minmax(0, 1fr) 32px;
         gap: 12px 8px;

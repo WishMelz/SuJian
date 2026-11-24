@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-theme-pref="light" data-accent="zinc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>评论区样式回归页</title>
+    <link rel="icon" href="../favicon.svg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://registry.npmmirror.com/@fontsource/noto-serif-sc/5.3.1/files/600.css">
+    <script>
+        // ?theme=dark 切换深色，?accent=cinnabar|blue|emerald|violet|rose|zinc 切换强调色
+        (function () {
+            var params = new URLSearchParams(location.search);
+            var theme = params.get('theme') === 'dark' ? 'dark' : 'light';
+            var accent = params.get('accent');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-theme-pref', theme);
+            if (accent) document.documentElement.setAttribute('data-accent', accent);
+        })();
+    </script>
+</head>
+<body>
+    <!--
+        本页使用 Typecho 1.3 默认 listComments() 输出的真实 DOM 结构
+        （var/Widget/Comments/Archive.php::threadedCommentsCallback），
+        用来在站点关闭评论时检查评论区样式。不连接数据库，可随发布包一起排除 tests/ 目录。
+    -->
+    <main class="container single-layout" id="main" tabindex="-1">
+        <nav class="article-back" aria-label="切换">
+            <a class="article-back-button" href="comments-layout.html">浅色</a>
+            <a class="article-back-button" href="comments-layout.html?theme=dark">深色</a>
+            <a class="article-back-button" href="comments-layout.html?theme=dark&amp;accent=cinnabar">深色 · 朱砂</a>
+        </nav>
+        <section id="comments" class="comments" aria-label="评论">
+            <div class="comments-list">
+                <h2 class="comments-title">4 条评论</h2>
+                <ol class="comment-list">
+                    <li itemscope itemtype="http://schema.org/UserComments" id="comment-11" class="comment-body comment-parent comment-odd">
+                        <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+                            <span itemprop="image"><img class="avatar" loading="lazy" src="../favicon.svg" alt="小明" width="32" height="32"></span>
+                            <cite class="fn" itemprop="name"><a href="https://example.com" rel="external nofollow">小明</a></cite>
+                        </div>
+                        <div class="comment-meta">
+                            <a href="#comment-11"><time itemprop="commentTime" datetime="2026-11-20T10:00:00+08:00">2026年11月20日</time></a>
+                        </div>
+                        <div class="comment-content" itemprop="commentText">
+                            <p>写得很清楚，按步骤配置后 <code>nginx -t</code> 通过了。顺便问一下 <a href="#">stream 模块</a>需要单独编译吗？</p>
+                            <blockquote><p>如果你也有一台欧洲国内优化的机器，那么可以和我的做法一样。</p></blockquote>
+                        </div>
+                        <div class="comment-reply"><a href="#respond" rel="nofollow">回复</a></div>
+                        <div class="comment-children" itemprop="discusses">
+                            <ol class="comment-list">
+                                <li itemscope itemtype="http://schema.org/UserComments" id="comment-12" class="comment-body comment-child comment-level-odd comment-even comment-by-author">
+                                    <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+                                        <span itemprop="image"><img class="avatar" loading="lazy" src="../favicon.svg" alt="Wish" width="32" height="32"></span>
+                                        <cite class="fn" itemprop="name">Wish</cite>
+                                    </div>
+                                    <div class="comment-meta">
+                                        <a href="#comment-12"><time itemprop="commentTime" datetime="2026-11-20T11:00:00+08:00">2026年11月20日</time></a>
+                                    </div>
+                                    <div class="comment-content" itemprop="commentText">
+                                        <p>大多数发行版的官方包已经带了 <code>--with-stream</code>，可以先用 <code>nginx -V</code> 确认。这是一条较长的回复，用来检查文字在嵌套层级中是否贴边、换行是否正常、右侧是否留有足够的内边距。</p>
+                                    </div>
+                                    <div class="comment-reply"><a href="#respond" rel="nofollow">回复</a></div>
+                                    <div class="comment-children" itemprop="discusses">
+                                        <ol class="comment-list">
+                                            <li itemscope itemtype="http://schema.org/UserComments" id="comment-13" class="comment-body comment-child comment-level-even comment-odd">
+                                                <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+                                                    <span itemprop="image"><img class="avatar" loading="lazy" src="../favicon.svg" alt="小明" width="32" height="32"></span>
+                                                    <cite class="fn" itemprop="name">小明</cite>
+                                                </div>
+                                                <div class="comment-meta">
+                                                    <a href="#comment-13"><time itemprop="commentTime" datetime="2026-11-20T12:00:00+08:00">2026年11月20日</time></a>
+                                                    <em class="comment-awaiting-moderation">您的评论正等待审核！</em>
+                                                </div>
+                                                <div class="comment-content" itemprop="commentText">
+                                                    <p>确认过了，谢谢！ThisIsAVeryLongUnbrokenIdentifierUsedToCheckOverflowWrappingInsideNestedComments</p>
+                                                </div>
+                                                <div class="comment-reply"><a href="#respond" rel="nofollow">回复</a></div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li itemscope itemtype="http://schema.org/UserComments" id="comment-14" class="comment-body comment-parent comment-even">
+                        <div class="comment-author" itemprop="creator" itemscope itemtype="http://schema.org/Person">
+                            <span itemprop="image"><img class="avatar" loading="lazy" src="../favicon.svg" alt="访客" width="32" height="32"></span>
+                            <cite class="fn" itemprop="name">访客</cite>
+                        </div>
+                        <div class="comment-meta">
+                            <a href="#comment-14"><time itemprop="commentTime" datetime="2026-11-21T09:00:00+08:00">2026年11月21日</time></a>
+                        </div>
+                        <div class="comment-content" itemprop="commentText"><p>第二条顶层评论。</p></div>
+                        <div class="comment-reply"><a href="#respond" rel="nofollow">回复</a></div>
+                    </li>
+                </ol>
+            </div>
+
+            <div id="respond" class="respond">
+                <div class="cancel-comment-reply"><a id="cancel-comment-reply-link" href="#respond" rel="nofollow" style="display:none">取消回复</a></div>
+                <h2 id="response" class="respond-title">发表评论</h2>
+                <form method="post" action="#" id="comment-form" class="comment-form" onsubmit="return false">
+                    <div class="field-grid">
+                        <div class="field"><label for="author">称呼 <span class="required-mark" aria-hidden="true">*</span></label><input type="text" name="author" id="author" autocomplete="name" required></div>
+                        <div class="field"><label for="mail">邮箱 <span class="required-mark" aria-hidden="true">*</span></label><input type="email" name="mail" id="mail" autocomplete="email" required></div>
+                        <div class="field"><label for="url">网站</label><input type="url" name="url" id="url" autocomplete="url" placeholder="https://"></div>
+                    </div>
+                    <div class="field"><label for="textarea">评论内容 <span class="required-mark" aria-hidden="true">*</span></label><textarea rows="7" name="text" id="textarea" placeholder="写下你的想法…" required></textarea></div>
+                    <button class="button button-primary" type="submit">提交评论</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

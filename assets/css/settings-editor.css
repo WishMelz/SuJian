@@ -8,11 +8,35 @@ textarea[data-sujian-navigation][hidden],
     letter-spacing: 0;
 }
 .sujian-settings-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
     display: flex;
     flex-wrap: wrap;
     gap: 4px 20px;
     padding: 12px 0;
+    background: #f6f6f3;
     border-bottom: 1px solid var(--setting-border);
+}
+body:has(.typecho-head-nav) .sujian-settings-nav {
+    top: 36px;
+}
+@media (max-width: 575px) {
+    /* 窄屏改为单行横向滚动，避免吸顶导航占用两行高度 */
+    .sujian-settings-nav {
+        flex-wrap: nowrap;
+        gap: 18px;
+        /* width:0 + min-width:100%：不把单行内容的宽度传给外层栏，避免整页出现横向滚动 */
+        width: 0;
+        min-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        white-space: nowrap;
+    }
+    .sujian-settings-nav::-webkit-scrollbar {
+        display: none;
+    }
 }
 .sujian-settings-nav a {
     padding: 6px 0;
@@ -21,7 +45,7 @@ textarea[data-sujian-navigation][hidden],
 .sujian-settings-section {
     padding: 24px 0 12px;
     border-bottom: 1px solid var(--setting-border);
-    scroll-margin-top: 24px;
+    scroll-margin-top: 108px;
 }
 .sujian-settings-section h3 {
     margin: 0 0 24px;
@@ -140,6 +164,34 @@ textarea[data-sujian-navigation][hidden],
 }
 .sujian-footer-tokens select {
     height: 36px;
+}
+.sujian-accent-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-left: 8px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15);
+    vertical-align: middle;
+}
+/* 保存按钮吸底，长表单任何位置都能直接保存 */
+.sujian-settings .sujian-settings-submit {
+    position: sticky;
+    bottom: 0;
+    z-index: 15;
+    margin: 0;
+    padding: 12px 0;
+    background: #f6f6f3;
+    border-top: 1px solid var(--setting-border);
+}
+.sujian-settings .sujian-settings-submit li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.sujian-settings-state {
+    color: #a15c07;
+    font-size: 12px;
 }
 @container (max-width: 620px) {
     .sujian-navigation-row {

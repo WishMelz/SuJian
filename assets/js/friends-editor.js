@@ -17,7 +17,7 @@
         const add = document.createElement('button');
         add.type = 'button';
         add.className = 'btn sujian-friends-add';
-        add.textContent = '+ 添加友联';
+        add.textContent = '+ 添加友链';
         const status = document.createElement('span');
         status.className = 'sujian-friends-status';
         status.setAttribute('role', 'status');
@@ -38,8 +38,10 @@
             if (!['http:', 'https:'].includes(url.protocol) || /\s/.test(value) || /^[a-z][a-z0-9+.-]*:(?!\/\/)/i.test(value)) {
                 throw new Error('Invalid URL');
             }
-            return value.startsWith('/') && !value.startsWith('//')
-                ? url.pathname + url.search + url.hash : url.href === value + '/' ? value : url.href;
+            const isAbsolute = /^https?:\/\//i.test(value) || value.startsWith('//');
+            return isAbsolute
+                ? (url.href === value + '/' ? value : url.href)
+                : url.pathname + url.search + url.hash;
         }
 
         function synchronize() {
@@ -149,15 +151,15 @@
             remove.type = 'button';
             remove.className = 'btn sujian-friend-remove';
             remove.textContent = '×';
-            remove.title = '删除此友联';
-            remove.setAttribute('aria-label', '删除此友联');
+            remove.title = '删除此友链';
+            remove.setAttribute('aria-label', '删除此友链');
             remove.addEventListener('click', function () {
                 const name = row.querySelector('input').value.trim();
                 const target = row.nextElementSibling || row.previousElementSibling;
                 row.remove();
                 dirty = true;
                 synchronize();
-                status.textContent = name ? '已删除：' + name : '已删除空白友联';
+                status.textContent = name ? '已删除：' + name : '已删除空白友链';
                 (target ? target.querySelector('input') : add).focus();
             });
             actions.append(remove);
@@ -172,7 +174,7 @@
             if (focus) {
                 dirty = true;
                 synchronize();
-                status.textContent = '已添加友联';
+                status.textContent = '已添加友链';
                 row.querySelector('input').focus();
             }
         }
@@ -196,6 +198,8 @@
 
         function syncEnabledState() {
             const enabled = form.querySelector('[name="friendsEnabled"]:checked')?.value === '1';
+            const optionGroup = source.closest('ul');
+            if (optionGroup) optionGroup.hidden = !enabled;
             editor.hidden = !enabled;
             Array.from(rows.querySelectorAll('input, button')).forEach(function (input) {
                 input.disabled = !enabled;

@@ -33,8 +33,10 @@
         if (!['http:', 'https:'].includes(url.protocol)) {
             throw new Error('地址仅支持 http/https。');
         }
-        return trimmed.startsWith('/') && !trimmed.startsWith('//')
-            ? url.pathname + url.search + url.hash : url.href === trimmed + '/' ? trimmed : url.href;
+        const isAbsolute = /^https?:\/\//i.test(trimmed) || trimmed.startsWith('//');
+        return isAbsolute
+            ? (url.href === trimmed + '/' ? trimmed : url.href)
+            : url.pathname + url.search + url.hash;
     }
 
     function initializeNavigation(source) {
@@ -158,6 +160,7 @@
     function initializeGradient(form) {
         const source = form.elements.bannerGradient;
         const mode = form.elements.bannerMode;
+        if (!source || !mode || !source.closest('li')) return;
         const fallback = '135deg, #7c3aed 0%, #4f46e5 48%, #0ea5e9 100%';
         const editor = document.createElement('div');
         editor.className = 'sujian-gradient-editor';
@@ -270,7 +273,8 @@
         controls.append(stops, add);
         editor.append(preview, controls, replace, advanced);
         angle.addEventListener('input', synchronize);
-        source.addEventListener('input', load);
+        source.addEventListener('input', validate);
+        source.addEventListener('change', load);
         mode.addEventListener('change', validate);
         form.addEventListener('reset', function () { setTimeout(load, 0); });
         form.addEventListener('submit', validate);
@@ -280,15 +284,17 @@
     function organize(form) {
         form.classList.add('sujian-settings');
         const groups = [
-            ['basic', '基础外观', ['headerLogo', 'accent', 'articleLinkTarget']],
+            ['basic', '基础外观', ['headerLogo', 'accent', 'headingFont', 'articleLinkTarget']],
             ['navigation', '导航菜单', ['navigation']],
-            ['banner', '首页横幅', ['bannerMode', 'bannerTitle', 'bannerDescription', 'bannerImage', 'bannerGradient']],
+            ['banner', '首页题头', ['bannerMode', 'bannerTitle', 'bannerDescription', 'bannerImage', 'bannerGradient']],
             ['friends', '友情链接', ['friendsEnabled', 'friendsData']],
             ['comments', '评论', ['commentsEnabled']],
             ['seo', '搜索与分享', ['seoSiteDescription', 'seoDefaultImage', 'seoLogo']],
             ['footer', '页脚', ['footerText']]
         ];
-        const anchor = form.elements.headerLogo.closest('ul');
+        const headerLogo = form.elements.headerLogo;
+        const anchor = headerLogo ? headerLogo.closest('ul') : null;
+        if (!anchor) return;
         const contents = document.createElement('nav');
         contents.className = 'sujian-settings-nav';
         contents.setAttribute('aria-label', '主题设置分组');
@@ -310,24 +316,40 @@
             previous.after(section);
             group[2].forEach(function (name) {
                 const input = form.querySelector('[name="' + name + '"]');
-                section.append(input.closest('ul'));
+                const option = input ? input.closest('ul') : null;
+                if (option) section.append(option);
             });
+            // 分组里只有一个字段且字段名与分组标题相同时（如“导航菜单”），隐藏重复的字段标签
+            if (group[2].length === 1) {
+                const fieldLabel = section.querySelector('.typecho-label');
+                if (fieldLabel && fieldLabel.textContent.trim() === group[1]) fieldLabel.hidden = true;
+            }
             previous = section;
         });
         const mode = form.elements.bannerMode;
+        const bannerImageField = form.elements.bannerImage;
+        const bannerGradientField = form.elements.bannerGradient;
         function toggleBanner() {
-            form.elements.bannerImage.closest('ul').hidden = mode.value !== 'image';
-            form.elements.bannerGradient.closest('ul').hidden = mode.value !== 'gradient';
+            if (!mode) return;
+            if (bannerImageField && bannerImageField.closest('ul')) {
+                bannerImageField.closest('ul').hidden = mode.value !== 'image';
+            }
+            if (bannerGradientField && bannerGradientField.closest('ul')) {
+                bannerGradientField.closest('ul').hidden = mode.value !== 'gradient';
+            }
         }
-        mode.addEventListener('change', toggleBanner);
-        form.addEventListener('reset', function () { setTimeout(toggleBanner, 0); });
-        toggleBanner();
+        if (mode) {
+            mode.addEventListener('change', toggleBanner);
+            form.addEventListener('reset', function () { setTimeout(toggleBanner, 0); });
+            toggleBanner();
+        }
 
         ['headerLogo', 'seoDefaultImage', 'seoLogo', 'bannerImage'].forEach(function (name) {
             const image = form.elements[name];
+            if (!image) return;
             function validateImage() {
                 let error = '';
-                if ((name !== 'bannerImage' || mode.value === 'image') && image.value.trim()) {
+                if ((name !== 'bannerImage' || !mode || mode.value === 'image') && image.value.trim()) {
                     try { address(image.value); } catch (exception) { error = exception.message; }
                 }
                 image.setCustomValidity(error);
@@ -342,7 +364,7 @@
             }
             image.addEventListener('input', validateImage);
             image.addEventListener('change', function () { normalizeImage(); validateImage(); });
-            if (name === 'bannerImage') mode.addEventListener('change', validateImage);
+            if (name === 'bannerImage' && mode) mode.addEventListener('change', validateImage);
             form.addEventListener('submit', normalizeImage);
             form.addEventListener('formdata', function (event) {
                 normalizeImage();
@@ -353,23 +375,67 @@
         });
 
         const footer = form.elements.footerText;
-        const label = form.querySelector('label[for="' + footer.id + '"]');
-        if (label) label.textContent = '页脚内容';
-        const toolbar = document.createElement('div');
-        toolbar.className = 'sujian-footer-tokens';
-        const tokens = document.createElement('select');
-        tokens.setAttribute('aria-label', '页脚变量');
-        [['year', '当前年份'], ['siteTitle', '站点名称'], ['siteUrl', '站点地址'], ['description', '站点描述'], ['themeName', '主题名称'], ['themeNameEn', '主题英文名称'], ['themeNameZh', '主题中文名称'], ['themeUrl', '主题地址']].forEach(function (item) {
-            tokens.add(new Option(item[1], item[0]));
+        if (footer) {
+            const toolbar = document.createElement('div');
+            toolbar.className = 'sujian-footer-tokens';
+            const tokens = document.createElement('select');
+            tokens.setAttribute('aria-label', '页脚变量');
+            [['year', '当前年份'], ['siteTitle', '站点名称'], ['siteUrl', '站点地址'], ['description', '站点描述'], ['themeName', '主题名称'], ['themeNameEn', '主题英文名称'], ['themeNameZh', '主题中文名称'], ['themeUrl', '主题地址']].forEach(function (item) {
+                tokens.add(new Option(item[1], item[0]));
+            });
+            toolbar.append(tokens, button('+ 插入变量', '插入页脚变量', function () {
+                footer.setRangeText('{' + tokens.value + '}', footer.selectionStart, footer.selectionEnd, 'end');
+                footer.dispatchEvent(new Event('input', { bubbles: true }));
+                footer.focus();
+            }));
+            footer.before(toolbar);
+        }
+
+        decorateAccent(form);
+        trackUnsavedChanges(form);
+    }
+
+    // 强调色下拉框旁显示当前颜色色块，选择时即可预览
+    function decorateAccent(form) {
+        const accent = form.elements.accent;
+        if (!accent || accent.tagName !== 'SELECT') return;
+        const colors = { zinc: '#2b2926', cinnabar: '#b0392a', blue: '#2f5d8a', emerald: '#2f6f5e', violet: '#6a4fb3', rose: '#b23a5a' };
+        const swatch = document.createElement('span');
+        swatch.className = 'sujian-accent-swatch';
+        swatch.setAttribute('aria-hidden', 'true');
+        function update() { swatch.style.backgroundColor = colors[accent.value] || colors.zinc; }
+        accent.after(swatch);
+        accent.addEventListener('change', update);
+        form.addEventListener('reset', function () { setTimeout(update, 0); });
+        update();
+    }
+
+    // 保存按钮吸底，修改后提示“有未保存的修改”，离开页面前提醒
+    function trackUnsavedChanges(form) {
+        const submitOption = form.querySelector('.typecho-option-submit');
+        if (!submitOption) return;
+        submitOption.classList.add('sujian-settings-submit');
+        const state = document.createElement('span');
+        state.className = 'sujian-settings-state';
+        state.setAttribute('role', 'status');
+        const submitItem = submitOption.querySelector('li') || submitOption;
+        submitItem.append(state);
+        let dirty = false;
+        let submitting = false;
+        function setDirty(value) {
+            dirty = value;
+            submitOption.classList.toggle('is-dirty', dirty);
+            state.textContent = dirty ? '有未保存的修改' : '';
+        }
+        form.addEventListener('input', function () { setDirty(true); });
+        form.addEventListener('change', function () { setDirty(true); });
+        form.addEventListener('reset', function () { setTimeout(function () { setDirty(false); }, 0); });
+        form.addEventListener('submit', function () { submitting = true; });
+        window.addEventListener('beforeunload', function (event) {
+            if (!dirty || submitting) return;
+            event.preventDefault();
+            event.returnValue = '';
         });
-        toolbar.append(tokens, button('+ 插入变量', '插入页脚变量', function () {
-            footer.setRangeText('{' + tokens.value + '}', footer.selectionStart, footer.selectionEnd, 'end');
-            footer.dispatchEvent(new Event('input', { bubbles: true }));
-            footer.focus();
-        }));
-        footer.before(toolbar);
-        const description = footer.closest('li').querySelector('.description');
-        if (description) description.textContent = '支持纯文本或 HTML。';
     }
 
     function initialize() {
