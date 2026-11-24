@@ -11,19 +11,22 @@
         </a>
     </nav>
     <?php endif; ?>
-    <article class="article" itemscope itemtype="https://schema.org/BlogPosting">
+    <article class="article">
         <header class="article-header">
-            <div class="category-list"><span class="badge"><?php $this->category('</span><span class="badge">', true, '随笔'); ?></span></div>
-            <h1 itemprop="headline"><?php $this->title(); ?></h1>
+            <h1><?php $this->title(); ?></h1>
             <div class="article-meta">
-                <time datetime="<?php $this->date('c'); ?>" itemprop="datePublished"><?php $this->date('Y年m月d日'); ?></time>
+                <time datetime="<?php $this->date('c'); ?>"><?php $this->date('Y年n月j日'); ?></time>
+                <span class="post-meta-sep" aria-hidden="true">·</span>
+                <span class="article-cats"><?php $this->category('、', true, '随笔'); ?></span>
             </div>
         </header>
-        <div class="article-divider"></div>
-        <div class="article-content markdown-body" itemprop="articleBody"><?php $this->content(); ?></div>
+        <div class="article-content markdown-body"><?php $this->content(); ?></div>
+        <?php ob_start(); $this->tags('', true, ''); $articleTagsHtml = trim(ob_get_clean()); ?>
+        <?php if ($articleTagsHtml !== ''): ?>
         <footer class="article-footer">
-            <div class="article-tags"><strong>标签</strong><span class="badge badge-muted"><?php $this->tags('</span><span class="badge badge-muted">', true, '暂无标签'); ?></span></div>
+            <div class="article-tags" aria-label="标签"><?php echo $articleTagsHtml; ?></div>
         </footer>
+        <?php endif; ?>
     </article>
 
     <nav class="post-near" aria-label="相邻文章">
@@ -33,5 +36,4 @@
 
     <?php $this->need('comments.php'); ?>
 </main>
-<div id="sujian-back-to-top"></div>
 <?php $this->need('footer.php'); ?>

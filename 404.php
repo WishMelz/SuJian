@@ -1,6 +1,6 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit; ?>
 <?php $this->need('header.php'); ?>
-<main class="container error-layout" id="main">
+<main class="container error-layout" id="main" tabindex="-1">
     <section class="empty-state error-state">
         <span class="error-code">404</span>
         <h1>页面似乎走远了</h1>
